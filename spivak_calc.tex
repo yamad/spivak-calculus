@@ -1,0 +1,467 @@
+\documentclass[11pt]{article}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{calc}
+\usepackage{thmtools}
+\usepackage{mathtools}
+\usepackage{bm}
+
+\newcommand{\setnumref}[2]{\setcounter{#1}{#2}\addtocounter{#1}{-1}}
+\renewcommand{\thepart}{\Roman{part}}
+\renewcommand{\thesection}{\thepart~\arabic{section}}
+\newcommand{\partref}[1]{\setnumref{part}{#1}\part}
+\newcommand{\sectionref}[1]{\setnumref{section}{#1}\section}
+\newcommand{\subsectionref}[1]{\setnumref{subsection}{#1}\subsection}
+%$\newcommand{\subsectionref}[1]{\renewcommand{\thesubsection}{\thesection.#1}\subsection}
+
+\declaretheoremstyle[headfont=\sc,spaceabove=3em]{axiomstyle}
+
+\declaretheorem[style=axiomstyle, name=Axiom]{inneraxiomref}
+\newenvironment{axiomref}[1]
+{\renewcommand\theinneraxiomref{#1}\inneraxiomref}
+{\endinneraxiomref}
+
+\declaretheorem[style=axiomstyle, name=Theorem]{innerthmref}
+\newenvironment{theoremref}[1]
+{\renewcommand\theinnerthmref{#1}\innerthmref}
+{\endinnerthmref}
+
+\declaretheorem[name=Problem]{innerproblem}
+\newenvironment{problem}[1]
+{\renewcommand\theinnerproblem{#1}\innerproblem}
+{\endinnerproblem}
+
+\declaretheoremstyle[headfont=\sc, notefont=\sc, notebraces={}{}]{defstyle}
+\declaretheorem[style=defstyle, numbered=no]{definition}
+
+\declaretheorem{lemma}
+
+\declaretheorem[style=remark]{remark}
+
+% Common set definitions (reals, rationals, etc)
+\newcommand{\Rplus}{\ensuremath{\Real^+}}       % reals (positive)
+\newcommand{\Real}{\ensuremath{\mathbf{R}}}     % reals
+
+\newcommand{\Integer}{\ensuremath{\mathbf{Z}}}  % integers
+\newcommand{\Zplus}{\ensuremath{\mathbf{P}}}    % integers (positive)
+
+\newcommand{\Rational}{\ensuremath{\mathbf{Q}}} % rationals
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+% flip meaning of starred and non-starred commands so non-starred resizes
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\makeatother
+
+\newcommand{\evalat}{\Bigg\rvert}
+
+\begin{document}
+
+\tableofcontents
+
+\sectionref{1}{Basic Properties of Numbers}
+
+For any numbers $a$, $b$, and $c$:
+
+\begin{axiomref}{P1}[Associative law for addition]
+  $a + (b + c) = (a + b) + c$.
+\end{axiomref}
+
+\begin{axiomref}{P2}[Existence of an additive identity]
+  $a + 0 = 0 + a = a$.
+\end{axiomref}
+
+\begin{axiomref}{P3}[Existence of additive inverses]
+  $a + (-a) = (-a) + a = 0$.
+\end{axiomref}
+
+\begin{axiomref}{P4}[Commutative law for addition]
+  $a + b = b + a$.
+\end{axiomref}
+
+\begin{axiomref}{P5}[Associative law for multiplication]
+  $a \cdot (b \cdot c) = (a \cdot b) \cdot c$.
+\end{axiomref}
+
+\begin{axiomref}{P6}[Existence of a multiplicative identity]
+  $a \cdot 1 = 1 \cdot a = a; 1 \neq 0$.
+\end{axiomref}
+
+\begin{axiomref}{P7}[Existence of multiplicative inverses]
+  $a \cdot a^{-1} = a^{-1} \cdot a = 1$, for $a \neq 0$.
+\end{axiomref}
+
+\begin{axiomref}{P8}[Commutative law for multiplication]
+  $a \cdot b = b \cdot a$.
+\end{axiomref}
+
+\begin{axiomref}{P9}[Distributive law]
+  $a \cdot (b + c) = a \cdot b + a \cdot c$.
+\end{axiomref}
+
+In the following, $P$ is the collection of all positive numbers. That
+is $P = \{p \in \Real | p > 0\}$.
+
+\begin{axiomref}{P10}[Trichotomy law]
+  For every number $a$, one and only of the following holds:
+  \begin{enumerate}
+    \item $a = 0$,
+    \item $a$ is in the collection $P$,
+    \item $-a$ is in the collection $P$.
+  \end{enumerate}
+\end{axiomref}
+
+\begin{axiomref}{P11}[Closure under addition]
+  If $a$ and $b$ are in $P$, then $a + b$ is in $P$.
+\end{axiomref}
+
+\begin{axiomref}{P12}[Closure under multiplication]
+  If $a$ and $b$ are in $P$, then $a \cdot b$ is in $P$.
+\end{axiomref}
+
+Some symbol definitions:
+
+\begin{itemize}
+\item $a > b$ if $a - b$ is in P;
+\item $a < b$ if $b > a$;
+\item $a \geq b$ if $a > b$ or $a = b$;
+\item $a \leq b$ if $a < b$ or $a = b$.
+\end{itemize}
+
+\sectionref{5}{Limits}
+
+\begin{definition}
+  The function \textbf{$f$ approaches the limit $l$ near $a$} means:
+  for every $\varepsilon > 0$ there is some $\delta > 0$ such that,
+  for all $x$, if $0 < \abs{x - a} < \delta$, then
+  $\abs{f(x) - l} < \varepsilon.$
+
+  \begin{remark}
+    Usually the goal here is to express $delta$ as a function of
+    $\varepsilon$. This way, any $\varepsilon$ that is picked has an
+    associated $\delta$.
+  \end{remark}
+\end{definition}
+
+\sectionref{6}{Continuous Functions}
+
+\begin{definition}
+  The function $f$ is \textbf{continuous at $a$} if
+  \[
+    \lim_{x \to a}{f(x)} = f(a).
+  \]
+\end{definition}
+
+\begin{theoremref}{6-1}
+  If $f$ and $g$ are continuous at $a$, then
+
+  \begin{enumerate}
+  \item $f + g$ is continuous at $a$,
+  \item $f \cdot g$ is continuous at $a$.
+  \item $1/g$ is continuous at $a$, if $g(a) \neq 0$.
+  \end{enumerate}
+\end{theoremref}
+
+\sectionref{7}{Three Hard Theorems (Continuity on Intervals)}
+
+\begin{theoremref}{7-1}[Intermediate Value Theorem (with 7-4 and 7-5)]
+  If $f$ is continuous on $[a,b]$ and $f(a) < 0 < f(b)$, then there
+  is some $x$ in $[a,b]$ such that $f(x) = 0$.
+  \begin{remark}
+    A continuous function crosses the x-axis if it starts below it and
+    ends above it.
+  \end{remark}
+\end{theoremref}
+
+\begin{theoremref}{7-2}
+  If $f$ is continuous on $[a,b]$ then $f$ is bounded above on
+  $[a,b]$, that is, there is some number $N$ such that $f(x) \leq N$
+  for all $x$ in $[a,b]$.
+  \begin{remark}
+    The graph of $f$ lies below some horizontal line. In other words,
+    all values of $f$ on an interval will be less than or equal to
+    some number $N$.
+  \end{remark}
+\end{theoremref}
+
+\begin{theoremref}{7-3}
+  If $f$ is continuous on $[a,b]$, then there is some number $y$ in
+  $[a,b]$ such that $f(y) \geq f(x)$ for all $x$ in $[a,b]$.
+  \begin{remark}
+    There is a maximum value of a continuous function $f$ on a closed
+    interval.
+  \end{remark}
+\end{theoremref}
+
+\begin{theoremref}{7-4}
+  If $f$ is continuous on $[a,b]$ and $f(a) < c < f(b)$, then there is
+  some $x$ in $[a,b]$ such that $f(x) = c$.
+\end{theoremref}
+
+\begin{theoremref}{7-5}
+  If $f$ is continuous on $[a,b]$ and $f(a) > c > f(b)$, then there is
+  some $x$ in $[a,b]$ such that $f(x) = c$.
+\end{theoremref}
+
+\begin{remark}
+  \emph{Intermediate value theorem}. If a continuous function on an
+  interval takes on two values, it takes on every value in between. A
+  simple consequence of Theorems 7-4 and 7-5 together.
+\end{remark}
+
+\begin{theoremref}{7-6}
+  If $f$ is continuous on $[a,b]$, then $f$ is bounded below on
+  $[a,b]$, that is, there is some number $N$ such that $f(x) \geq N$
+  for all $x$ in $[a,b]$.
+\end{theoremref}
+
+\begin{remark}
+  A continuous function is bounded from above and below, as a
+  consequence of Theorems 7-2 and 7-6.
+\end{remark}
+
+\begin{theoremref}{7-7}
+  If $f$ is continuous on $[a,b]$, thne there is some $y$ in $[a,b]$
+  such that $f(y) \leq f(x)$ for all $x$ in $[a,b]$.
+  \begin{remark}
+    There is a minimum value of a continuous function on a closed interval.
+  \end{remark}
+\end{theoremref}
+
+\begin{theoremref}{7-8}
+  Every positive number has a square root. In other words, if $\alpha
+  > 0$, then there is some number $x$ such that $x^2 = \alpha$.
+\end{theoremref}
+
+\begin{theoremref}{7-9}
+  If $n$ is odd, then any equation
+
+  \[
+    x^n + a_{n-1}x^{n-1} + \cdots + a_0 = 0
+  \]
+
+has a root.
+\end{theoremref}
+
+\begin{theoremref}{7-10}
+  If $n$ is even and $f(x) = x^n + a_{n-1}x^{n-1} + \cdots + a_0$,
+  then there is a number $y$ such that $f(y) \leq f(x)$ for all $x$.
+\end{theoremref}
+
+\begin{theoremref}{7-11}
+  Consider the equation
+
+  \[
+  x^n + a_{n-1}x^{n-1} + \cdots + a_0 = c,
+  \]
+
+  and suppose $n$ is even. Then there is a number $m$ such that the
+  equation has a solution for $c \geq m$ and has no solution for $c < m$.
+\end{theoremref}
+
+\sectionref{9}{Derivatives}
+
+\begin{definition}
+  The function $f$ is \textbf{differentiable at $a$} if
+  \[
+    \lim_{h \to 0}{\frac{f(a+h) - f(a)}{h}} \text{ exists.}
+  \]
+
+  In this case the limit is denoted by $\bm{f'(a)}$ and is called the
+  \textbf{derivative of $f$ at $a$}. (We also say that $f$ is
+  \textbf{differentiable} if $f$ is differentiable at $a$ for every
+  $a$ in the domain of $f$.)
+\end{definition}
+
+\begin{theoremref}{9-1}
+  If $f$ is differentiable at $a$, then $f$ is continuous at $a$.
+  \begin{remark}
+    The converse is \emph{not true}. A differentiable function is
+    continuous, but a continuous function may not be differentiable.
+  \end{remark}
+\end{theoremref}
+
+\sectionref{10}{Differentiation}
+
+\sectionref{11}{Significance of the Derivative}
+
+\begin{definition}
+  Let $f$ be a function and $A$ a set of numbers contained in the
+  domain of $f$. A point $x$ in $A$ is a \textbf{maximum point} for
+  $f$ on $A$ if
+
+  \[
+  f(x) \geq f(y) \quad \text{for every $y$ in $A$.}
+  \]
+
+  The number $f(x)$ itself is called a \textbf{maximum value} of $f$
+  on $A$ (and we also say that $f$ ``has its maximum value on $A$ at
+  $x$'').
+\end{definition}
+
+\begin{theoremref}{11-1}
+  Left $f$ be any function defined on $(a,b)$. If $x$ is a maximum
+  (or a minimum) point of $f$ on $(a,b)$, and $f$ is differentiable
+  at $x$, then $f'(x) = 0$.
+\end{theoremref}
+
+\begin{theoremref}{11-4}[Mean Value Theorem]
+  \emph{Very important!} If $f$ is continuous on $[a,b]$ and
+  differentiable on $(a,b)$, then there is a number $x$ in $(a,b)$
+  such that
+
+  \[
+  f'(x) = \frac{f(b) - f(a)}{b - a}.
+  \]
+\end{theoremref}
+
+\begin{theoremref}{11-5}
+  Suppose $f'(a) = 0$. If $f''(a) > 0$, then $f$ has a local maximum
+  at $a$; if $f''(a) < 0$, then $f$ has a local maximum at $a$.
+  \begin{remark}
+    $f''(a) = 0$ is not informative; $f(a)$ may be a local maximum, a
+    local minimum, or neither.
+  \end{remark}
+\end{theoremref}
+
+\begin{remark}[Sketching a graph]
+  Find:
+  \begin{enumerate}
+  \item critical points of $f$ (where $f'(x) = 0$)
+  \item value of $f$ at critical points
+  \item sign of $f'$ in the regions between critical points
+  \item the numbers $x$ such that $f(x) = 0$
+  \item behavior of $f(x)$ as $x$ becomes large or large negative
+  \item check, if easy, if function is even or odd
+  \end{enumerate}
+\end{remark}
+
+\begin{theoremref}{11-8}[Cauchy Mean Value Theorem]
+  If $f$ and $g$ are continuous on $[a,b]$ and differentiable on $(a,
+  b)$, then there is a number $x$ in $(a, b)$ such that
+
+  \[
+  [f(b) - f(a)]g'(x) = [g(b)-g(a)]f'(x)
+  \]
+
+  (If $g(b) \neq g(a)$ and $g'(x) \neq 0$, this equation can be
+  written
+
+  \[
+  \frac{f(b) - f(a)}{g(b) - g(a)} = \frac{f'(x)}{g'(x)}. \quad )
+  \]
+\end{theoremref}
+
+\begin{theoremref}{11-9}[L'H\^{o}pital's Rule]
+  Suppose that
+
+  \[
+  \lim_{x \to a}{f(x)} = 0 \quad \text{and} \quad \lim_{x \to a}{g(x)}
+  = 0,
+  \]
+
+  and suppose also that $\lim_{x \to a}{f'(x)/g'(x)}$ exists. Then
+  $\lim_{x \to a}{f(x)/g(x)}$ exists, and
+
+  \[
+  \lim_{x \to a}{\frac{f(x)}{g(x)}} = \lim_{x \to a}{\frac{f'(x)}{g'(x)}}.
+  \]
+\end{theoremref}
+
+\sectionref{14}{Fundamental Theorem of Calculus}
+
+\begin{theoremref}{14-1}[The First Fundamental Theorem of Calculus]
+  Let $f$ be integrable on $[a, b]$, and define $F$ on $[a,b]$ by
+  \[
+    F(x) = \int_{a}^{x}{f}.
+  \]
+  If $f$ is continuous at $c$ in $[a,b]$, then $F$ is differentiable
+  at $c$, and
+  \[
+    F'(c) = f(c).
+  \]
+\end{theoremref}
+
+\begin{theoremref}{19-2}[The Second Fundamental Theorem of Calculus]
+  If $f$ is integrable on $[a,b]$ and $f = g'$ for some function $g$,
+  then
+  \[
+    \int_{a}^{b}{f} = g(b) - g(a).
+  \]
+\end{theoremref}
+
+\sectionref{19}{Integration in Elementary Terms (Indefinite
+  Integration)}
+
+Notation and some terms:
+
+\[
+F(x)\evalat_{a}^{b} = F(b) - F(a) \qquad \text{, by defintion}
+\]
+
+A function $F$ that satisfies $F' = f$ is a \textbf{primitive} of $f$.
+
+\begin{theoremref}{19-1}[Integration by Parts]
+  If $f'$ and $g'$ are continuous, then
+
+  \begin{gather}
+    \int{fg'} = fg - \int{f'g} \\
+    \int{f(x)g'(x)\, dx} = f(x)g(x) - \int{f'(x)g(x)\, dx} \\
+    \int_{a}^{b}{f(x)g'(x)\, dx = f(x)g(x)\evalat_a^b - \int_a^b{f'(x)g(x)\, dx}}
+  \end{gather}
+
+  \begin{remark}
+    Consequence of the product rule for differentiation $(fg)' = f'g +
+    fg'$, which can be written
+
+    \begin{align*}
+      fg' &= (fg)' - f'g \\
+      \int{fg'} &= \int{(fg)'} - \int{f'g},
+    \end{align*}
+
+    and $\int{(fg)'} = fg$, so
+
+    \begin{align*}
+      \int{fg'} = fg - \int{f'g}
+    \end{align*}
+
+  \end{remark}
+\end{theoremref}
+
+\begin{theoremref}{19-2}[The Substitution Formula]
+  If $f$ and $g'$ are continuous, then
+
+  \begin{gather}
+  \int_{g(a)}^{g(b)} f = \int_{a}^{b} (f \circ g) \cdot g' \\
+  \int_{g(a)}^{g(b)} f(u)\, du = \int_{a}^{b} f(\underbrace{g(x)}_{u}) \cdot \underbrace{g'(x)\, dx}_{du}.
+\end{gather}
+
+\begin{remark}
+  A consequence of the Chain Rule $(f \circ g)' = (f' \circ g)
+  \cdot g'$
+\end{remark}
+
+\end{theoremref}
+
+\subsection{Indefinite Integrals}
+
+\begin{align}
+  &\int{a \, dx} = ax \\
+  &\int{x^{n}\, dx} = \frac{x^{n+1}}{n+1}, \quad n \neq -1 \\
+  &\int{\frac{1}{x}\, dx} = \log{x} \\
+  &\int{e^{x}\, dx} = e^{x} \\
+  &\int{\sin x\, dx} = -\cos x \\
+  &\int{\cos x\, dx} = \sin x \\
+  &\int{\sec^2 x\, dx} = \tan x \\
+  &\int{\sec x \tan x \, dx} = \sec x \\
+  &\int{\frac{dx}{1 + x^{2}}} = \arctan x \\
+  &\int{\frac{dx}{\sqrt{1 - x^{2}}}} = \arcsin x \\
+\end{align}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

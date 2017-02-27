@@ -1,0 +1,6 @@
+Personal notes to keep track of important results from Michael Spivak's book
+Calculus (from the 4th edition).
+
+Of note in the TeX file is a patched together technique for manual numbering
+of theorems and sections. This allows the numbering in the notes to match up
+with the book.
